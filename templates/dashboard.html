@@ -8,46 +8,83 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="http://mediadotexchange.com/mag/logo.ico" type="image/x-icon">
 
-	<title>Dashboard</title>
-
-	<link rel="stylesheet" href="https://rawgit.com/saalmerol/django-election-site/master/static/assets/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://rawgit.com/saalmerol/django-election-site/master/static/assets/css/bootstrap-theme.min.css">
+	<title>Dashboard - MAG Elections</title>
+	<link rel="stylesheet" href="https://rawgit.com/formidablefrank/django-election-site/master/static/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://rawgit.com/formidablefrank/django-election-site/master/static/assets/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
 	<script src="https://cdn.rawgit.com/rmariuzzo/checkboxes.js/4a4b8f1d/dist/jquery.checkboxes-1.2.0.min.js" type="text/javascript"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 	function printDiv(divName) {
-	     var printContents = document.getElementById(divName).innerHTML;
-	     var originalContents = document.body.innerHTML;
+	    //  var printContents = document.getElementById(divName).innerHTML;
+	    //  var originalContents = document.body.innerHTML;
 
-	     document.body.innerHTML = printContents;
+	    //  document.body.innerHTML = printContents;
 
 	     window.print();
 
-	     document.body.innerHTML = originalContents;
+	    //  document.body.innerHTML = originalContents;
 	}
 	</script>
 	<style>
 		.photo {
 		  display: block;
-		  max-width:200px;
-		  max-height:500px;
-		  width: auto;
-		  height: auto;
+		  width: 15rem;
+		  height: 15rem;
+		}
+		.logo{
+			width: 15rem;
+			height: 15rem;
+			margin: 0rem 2rem 2rem 2rem;
+		}
+		@media screen {
+			.panel.header{
+				display: none;
+			}
+			.panel.approve{
+				display: none;
+			}
+		}
+		@media print {
+			.alert{
+				display: none;
+			}
+			.panel.header{
+				display: block;
+			}
+			.panel.settings{
+				display: none;
+			}
+			.panel.voters{
+				display: none;
+			}
+			.panel.approve{
+				display: block;
+			}
+			.photo {
+			  width: 15rem;
+			  height: 15rem;
+			}
+			.logo{
+				width: 20rem;
+				height: 20rem;
+				margin: 0rem 2rem 2rem 2rem;
+			}
 		}
 	</style>
 </head>
 <body>
 	<div class="container">
-		 <div id="loginbox" style="margin-top:50px;" class="mainbox">
-			 {% for message in messages %}
-						<div class="alert alert-{{ message.tags }}">{{ message }}</div>
-				{% endfor %}
-				<div class="row">
-					<div class="col-md-4">
-					<div class="panel panel-info" >
+		<div id="loginbox" style="margin-top:50px;" class="mainbox">
+			{% for message in messages %}
+				<div class="alert alert-{{ message.tags }}">{{ message }}</div>
+			{% endfor %}
+			<div class="row">
+				<div class="col-md-4">
+					<div class="settings panel panel-info" >
 						<div class="panel-heading">
 								<div class="panel-title">Settings</div>
 						</div>
@@ -69,7 +106,7 @@
 											 <h4 class="modal-title">Confirmation</h4>
 										 </div>
 										 <div class="modal-body">
-											 Are you sure you want to tally the results now? <i>This will finalize the results and will not be modified anymore.</i>
+											 Are you sure you want to tally the results now? <i>This will finalize the results and cannot be modified anymore.</i>
 										 </div>
 										 <div class="modal-footer">
 											 <button type="button" class="btn btn-primary" onclick="location.href='/admin/election/finalize/';">Yes</button>
@@ -81,7 +118,7 @@
 							 </div>
 							 {% endif %}
 							 {% if started == "2" %}
-							 <button type="button" class="btn btn-primary btn-block" onclick="printDiv('printableArea')">Print results</button>
+							 <button type="button" class="btn btn-primary btn-block" onclick="printDiv('printableArea')">Print Results</button>
 							 <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#resetmodal">Reset Election</button>
 							 <!-- Modal -->
 							 <div id="resetmodal" class="modal fade" role="dialog">
@@ -109,7 +146,7 @@
 							 <button type="button" class="btn btn-info btn-block" onclick="location.href='/logout/';">Logout</button>
 						</div>
 					</div>
-					<div class="panel panel-info" >
+					<div class="voters panel panel-info" >
 						<div class="panel-heading">
 								<div class="panel-title">Voters' turnout: {{ votedcount }}/{{ voterscount }} - {{ turnout }}%</div>
 						</div>
@@ -178,59 +215,77 @@
 					</div>
 				</div>
 				<div class="col-md-8">
-					 <div class="panel panel-info" >
-						 <div class="panel-heading">
-								 <div class="panel-title">Candidates</div>
-						 </div>
-						 <div style="padding-top:30px" class="panel-body" >
-							 <!-- Trigger the modal with a button -->
-								{% if started == "0" %}<button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#addcandidate">Add candidate/s</button>
-								<br>{% endif %}
-								<!-- Modal -->
-								<div id="addcandidate" class="modal fade" role="dialog">
-								  <div class="modal-dialog">
-
-								    <!-- Modal content-->
-								    <div class="modal-content">
-								      <div class="modal-header">
-								        <button type="button" class="close" data-dismiss="modal">&times;</button>
-								        <h4 class="modal-title">Add candidate</h4>
-								      </div>
-											<form action="/admin/candidate/add/" method="post" enctype="multipart/form-data">
-												{% csrf_token %}
-								      <div class="modal-body">
-												<div class="form-group">
-												  <label>Name:</label>
-												  <input type="text" class="form-control" name="name"></input>
-												</div>
-												<div class="form-group">
-												  <label>Nickname:</label>
-												  <input type="text" class="form-control" name="nickname"></input>
-												</div>
-												<div class="form-group">
-												  <label>Description</label>
-												  <textarea class="form-control" name="description" rows="5"></textarea>
-												</div>
-												<div class="form-group">
-													<label>Candidate Photo</label>
-													<input type="file" name="photo"></input>
-												</div>
-								      </div>
-								      <div class="modal-footer">
-												<input type="submit" class="btn btn-primary" value="Add candidate">
-								        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-								      </div>
-											</form>
-								    </div>
-
-								  </div>
-								</div>
-								<div id="printableArea">
-	             <table class="table table-condensed table-striped">
-	               <tbody>
-	                 {% for candidate in candidates %}
-	                 <tr>
-	                   <td><label>{{ candidate.name }} ({{ candidate.nickname }}) | {{ candidate.votes }} votes</label><br><i>{% autoescape off %}{{ candidate.description|truncatewords:20 }}{% endautoescape %}</i></td>
+					<div class="panel header">
+						<center>
+							<img src="http://mediadotexchange.com/mag/logo.jpg" class="logo"/>
+							<br>
+							<b>Medical Action Group</b><br>
+							Board of Trustees<br>
+							<i>Election Results</i>
+							<br><br>
+							{% now "DATETIME_FORMAT" %}<br>
+							Voters' turnout: {{ votedcount }}/{{ voterscount }} - {{ turnout }}%
+							<br><br>
+						</center>
+					</div>
+					<div class="panel panel-info" >
+						<div class="panel-heading">
+							 <div class="panel-title">Candidates</div>
+						</div>
+						<div style="padding-top:30px" class="panel-body" >
+						 <!-- Trigger the modal with a button -->
+							{% if started == "0" %}<button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#addcandidate">Add candidate/s</button>
+							<br>{% endif %}
+							<!-- Modal -->
+							<div id="addcandidate" class="modal fade" role="dialog">
+							  <div class="modal-dialog">
+							    <!-- Modal content-->
+							    <div class="modal-content">
+							      <div class="modal-header">
+							        <button type="button" class="close" data-dismiss="modal">&times;</button>
+							        <h4 class="modal-title">Add candidate</h4>
+							      </div>
+										<form action="/admin/candidate/add/" method="post" enctype="multipart/form-data">
+											{% csrf_token %}
+							      <div class="modal-body">
+											<div class="form-group">
+											  <label>Name:</label>
+											  <input type="text" class="form-control" name="name"></input>
+											</div>
+											<div class="form-group">
+											  <label>Nickname:</label>
+											  <input type="text" class="form-control" name="nickname"></input>
+											</div>
+											<div class="form-group">
+											  <label>Description</label>
+											  <textarea class="form-control" name="description" rows="5"></textarea>
+											</div>
+											<div class="form-group">
+												<label>Candidate Photo</label>
+												<input type="file" name="photo"></input>
+											</div>
+							      </div>
+							      <div class="modal-footer">
+											<input type="submit" class="btn btn-primary" value="Add candidate">
+							        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							      </div>
+										</form>
+							    </div>
+							  </div>
+							</div>
+							<div id="printableArea">
+					     <table class="table table-condensed table-striped">
+					       <tbody>
+					         {% for candidate in candidates %}
+					         <tr>
+										 {% if candidate.photo %}
+										 <td><img class="photo" src="{{ candidate.photo.url }}"></td>
+										 {% endif %}
+					           <td>
+											 <label>{{ candidate.name }} "{{ candidate.nickname }}"</label>
+											 <p>{{ candidate.votes }} votes</p>
+											 <i>{% autoescape off %}{{ candidate.description|truncatewords:20 }}{% endautoescape %}</i>
+										 </td>
 										 {% if started == "0" %}<td><button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#editcandidate{{ candidate.pk }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>{% endif %}
 										 <!-- Trigger the modal with a button -->
 										 <!-- Modal -->
@@ -260,12 +315,12 @@
 															 <textarea class="form-control" name="description" rows="5">{{ candidate.description }}</textarea>
 														 </div>
 														 <div class="form-group">
-			 													<label>Candidate Photo</label>
+																	<label>Candidate Photo</label>
 																{% if candidate.photo %}
 																<img class="photo" src="{{ candidate.photo.url }}"><br>
 																{% endif %}
-			 													<input type="file" name="photo"></input>
-			 												</div>
+																	<input type="file" name="photo"></input>
+																</div>
 													 </div>
 													 <div class="modal-footer">
 														 <input type="submit" class="btn btn-primary" value="Update candidate">
@@ -274,19 +329,34 @@
 													 </div>
 													 </form>
 												 </div>
-
 											 </div>
 										 </div>
-	                 </tr>
-	                 {% endfor %}
-	               </tbody>
-	             </table>
+					         </tr>
+					         {% endfor %}
+					       </tbody>
+					     </table>
 						 </div>
-						 </div>
-			     </div>
-				 </div>
-			 </div>
- </div>
+					 </div>
+					</div>
+					<div class="panel approve text-center">
+						<hr><br>
+						<div class="">
+							<h4><b>Approved by the MAG Electoral Board</b></h4>
+							<br><br><br>
+							<table class="table">
+								<tr>
+									<th width="25%" class="text-center">Dr. Dennis Batangan</th>
+									<th width="25%" class="text-center">Dr. Aurora Parong</th>
+									<th width="25%" class="text-center">Dr. Erlinda Senturias</th>
+									<th width="25%" class="text-center">Dr. Maria Corazon Teoxon</th>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>

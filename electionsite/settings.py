@@ -144,8 +144,6 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/login/'
 APPEND_SLASH = True
 
-STATIC_URL = '/static/'
-
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }

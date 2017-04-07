@@ -42,7 +42,7 @@ def login(request):
                         auth_login(request, user)
                         messages.success(request, 'Successfully logged in!')
                     else:
-                        messages.error(request, 'You have already voted. The result of the elections will be announced on April 28. Thank you.')
+                        messages.error(request, 'You have already voted. The result of the elections will be announced on April 28. Thank you!')
                     return redirect("/")
             else:
                 messages.error(request, 'This account does not exist. Please try again.')
@@ -94,7 +94,7 @@ def submit(request):
                 candidate.save()
             request.user.is_active = False
             request.user.save()
-            messages.success(request, 'Vote submitted! The result of the elections will be announced on April 28. Thank you.!')
+            messages.success(request, 'Vote submitted! The result of the elections will be announced on April 28. Thank you!')
             return redirect("/logout/")
         else:
             messages.error(request, 'Please vote for at most 7 candidates!')
